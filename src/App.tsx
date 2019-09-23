@@ -1,26 +1,30 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { connect } from 'react-redux';
 
-const App: React.FC = () => {
+import './App.css';
+import { AppState } from './redux/reducers';
+import { templateActions } from './redux/actions';
+
+const mapStateToProps = (state: AppState) => {
+  return {
+    template: state.template,
+  };
+};
+
+const App: React.FC<any> = ({ runActions, template }) => {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <div>
+        <strong>Text: </strong>{template.text}
+      </div>
+      <div>
+        <strong>API response: </strong>{template.apiText}
+      </div>
+      <button onClick={() => runActions('https://jsonplaceholder.typicode.com/todos/1', 'changed')}>Change text</button>
     </div>
   );
 }
 
-export default App;
+export default connect(mapStateToProps, {
+  runActions: templateActions.runActions,
+})(App);
